@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.yukti.jobmanager.JobManagerApplication;
 import com.yukti.jobmanager.controller.ServerResponse;
 import com.yukti.jobmanager.controller.ServerResponseCode;
 import com.yukti.jobmanager.model.BackupJob;
@@ -31,7 +30,7 @@ public class BackupJobController {
 
 	@Autowired
 	private WebClient.Builder webClientBuilder;
-
+	
 	@RequestMapping("create")
 	public ServerResponse save(@RequestParam("backupJobName") String backupJobName) {
 		BackupJob backupJob = new BackupJob(backupJobName);

@@ -9,12 +9,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 /**
  * @author Bishwadeep Roy
  *
  */
 @Entity
 @Table(name = "backupjobs")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@backupJobId", scope = BackupJob.class)
 public class BackupJob implements Serializable{
 	/**
 	 * 
