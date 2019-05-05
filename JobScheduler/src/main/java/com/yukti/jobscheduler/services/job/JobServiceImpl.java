@@ -29,6 +29,10 @@ import com.yukti.jobscheduler.util.JobUtil;
 
 
 
+/**
+ * @author Bishwadeep Roy
+ *
+ */
 @Service
 public class JobServiceImpl implements JobService{
 
@@ -56,18 +60,22 @@ public class JobServiceImpl implements JobService{
 		System.out.println("Request received to scheduleJob");
 
 		String jobKey = jobName;
-		String groupKey = "SampleGroup";	
+		String groupKey = "YuktiGroup";	
 		String triggerKey = jobName;		
 
 		JobDetail jobDetail = JobUtil.createJob(jobClass, false, context, jobKey, groupKey);
 
 		System.out.println("creating trigger for key :"+jobKey + " at date :"+date);
+		
 		Trigger cronTriggerBean = JobUtil.createCronTrigger(triggerKey, date, cronExpression, SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
 
 		try {
+			
 			Scheduler scheduler = schedulerFactoryBean.getScheduler();
 			Date dt = scheduler.scheduleJob(jobDetail, cronTriggerBean);
+			
 			System.out.println("Job with key jobKey :"+jobKey+ " and group :"+groupKey+ " scheduled successfully for date :"+dt);
+			
 			return true;
 		} catch (SchedulerException e) {
 			System.out.println("SchedulerException while scheduling job with key :"+jobKey + " message :"+e.getMessage());
@@ -198,7 +206,7 @@ public class JobServiceImpl implements JobService{
 	@Override
 	public boolean isJobWithNamePresent(String jobName) {
 		try {
-			String groupKey = "SampleGroup";
+			String groupKey = "YuktiGroup";
 			JobKey jobKey = new JobKey(jobName, groupKey);
 			Scheduler scheduler = schedulerFactoryBean.getScheduler();
 			if (scheduler.checkExists(jobKey)){
