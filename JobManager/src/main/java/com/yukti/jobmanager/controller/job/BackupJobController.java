@@ -13,6 +13,7 @@ import com.yukti.jobmanager.model.BackupJob;
 import com.yukti.jobmanager.model.Job;
 import com.yukti.jobmanager.service.job.BackupJobService;
 import com.yukti.jobmanager.util.JobManagerHelper;
+import com.yukti.jobmanager.util.transformer.BackupJobToJobTransformer;
 
 /**
  * @author Bishwadeep Roy
@@ -35,16 +36,11 @@ public class BackupJobController {
 	public ServerResponse save(@RequestParam("backupJobName") String backupJobName) {
 		BackupJob backupJob = new BackupJob(backupJobName);
 		
-		backupJobService.save(backupJob);
-		
-		Job job = new Job();
-		job.setJobName(backupJob.getBackupJobName());
+		Job job = new BackupJobToJobTransformer().transform(backupJobService.save(backupJob));
 		
 		final String uri = JobManagerHelper.buildURI(JobManagerHelper.HTTP, JobManagerHelper.JOB_SCHEDULER_SERVICE, JobManagerHelper.JOB_SCHEDULE_API);
 		 
-	    Job result = restTemplate.postForObject( uri, job,Job.class);
-	 
-		return getServerResponse(ServerResponseCode.SUCCESS, result);
+		return getServerResponse(ServerResponseCode.SUCCESS, restTemplate.postForObject( uri, job, Job.class));
 	}
 
 	public ServerResponse getServerResponse(int responseCode, Object data) {
