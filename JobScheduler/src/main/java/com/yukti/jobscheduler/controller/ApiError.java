@@ -1,5 +1,4 @@
-package com.yukti.jobmanager.controller;
-
+package com.yukti.jobscheduler.controller;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +11,14 @@ public class ApiError extends ServerResponse{
     private String message;
     private List<String> errors;
  
-    public ApiError(HttpStatus status, String message, List<String> errors) {
+    
+    
+    public ApiError() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public ApiError(HttpStatus status, String message, List<String> errors) {
         super();
         this.status = status;
         this.message = message;

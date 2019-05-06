@@ -7,14 +7,17 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yukti.jobscheduler.controller.ApiError;
 import com.yukti.jobscheduler.controller.ServerResponse;
 import com.yukti.jobscheduler.controller.ServerResponseCode;
+import com.yukti.jobscheduler.controller.ServerResponseHandler;
 import com.yukti.jobscheduler.jobs.CronJob;
 import com.yukti.jobscheduler.model.Job;
 import com.yukti.jobscheduler.services.job.JobService;
@@ -43,12 +46,17 @@ public class JobController {
 		
 		String cronExpression = "0 0/1 * 1/1 * ? *";
 		
+		ApiError apiError = new ApiError();
+		
+		apiError.setStatusCode(HttpStatus.CONFLICT.value());
 		
 		System.out.println("JobController.schedule()");
 
 		//Job Name is mandatory
 		if(jobName == null || jobName.trim().equals("")){
-			return getServerResponse(ServerResponseCode.JOB_NAME_NOT_PRESENT, false);
+			
+			return ServerResponseHandler.getServerResponse(ServerResponseCode.JOB_NAME_NOT_PRESENT, HttpStatus.NO_CONTENT, "Job name is not specified", null);
+			
 		}
 
 		//Check if job Name is unique;
@@ -57,19 +65,14 @@ public class JobController {
 			//Cron Trigger
 			boolean status = jobService.scheduleCronJob(jobName, CronJob.class, jobScheduleTime, cronExpression);
 			if(status){
-				return getServerResponse(ServerResponseCode.SUCCESS, jobService.getAllJobs());
+				return ServerResponseHandler.getServerResponse(ServerResponseCode.SUCCESS, jobService.getAllJobs());
 			}else{
-				return getServerResponse(ServerResponseCode.ERROR, false);
+				return ServerResponseHandler.getServerResponse(ServerResponseCode.ERROR, false);
 			}		
 		}else{
-			return getServerResponse(ServerResponseCode.JOB_WITH_SAME_NAME_EXIST, false);
+			return ServerResponseHandler.getServerResponse(ServerResponseCode.JOB_WITH_SAME_NAME_EXIST, false);
 		}
 	}
 	
-	public ServerResponse getServerResponse(int responseCode, Object data){
-		ServerResponse serverResponse = new ServerResponse();
-		serverResponse.setStatusCode(responseCode);
-		serverResponse.setData(data);
-		return serverResponse; 
-	}
+	
 }
