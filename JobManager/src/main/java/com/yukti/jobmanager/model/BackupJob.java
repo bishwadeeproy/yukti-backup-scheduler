@@ -34,6 +34,11 @@ public class BackupJob implements Serializable{
 	
 	
 
+	public BackupJob() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public BackupJob(String backupJobName) {
 		super();
 		this.backupJobName = backupJobName;
