@@ -13,6 +13,8 @@ import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 public class BackupSchedulerEurekaServerApplication {
 
 	public static void main(String[] args) {
+
+		//boostrap stater
 		SpringApplication.run(BackupSchedulerEurekaServerApplication.class, args);
 	}
 
